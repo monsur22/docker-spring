@@ -1,0 +1,14 @@
+version: '3'
+services:
+    app:
+        container_name: docker-spring
+        build: .
+            # context: .
+            # dockerfile: Dockerfile
+        ports:
+            - "8080:8080"
+        networks:
+            - spring-cloud-network
+networks:
+    spring-cloud-network:
+        driver: bridge
