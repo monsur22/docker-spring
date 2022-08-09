@@ -7,8 +7,44 @@ services:
             # dockerfile: Dockerfile
         ports:
             - "8080:8080"
+        depends_on:
+            - db
+        environment:
+            SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/property?createDatabaseIfNotExist=true
+            SPRING_DATASOURCE_USERNAME: root
+            SPRING_DATASOURCE_PASSWORD: spring
         networks:
             - spring-cloud-network
+    # mysql - Service
+    db:
+        image: mysql:5.7
+        container_name: db
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "3306:3306"
+        environment:
+            - MYSQL_ROOT_PASSWORD=spring
+        networks:
+            - spring-cloud-network
+
+
+    #PhpMyAdmin
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        container_name: "pma"
+        restart: always
+        ports:
+            - "8081:80"
+        environment:
+            SPRING_DATASOURCE_USERNAME: root
+            SPRING_DATASOURCE_PASSWORD: spring
+        depends_on:
+            - db
+        networks:
+            - spring-cloud-network
+
+
 networks:
     spring-cloud-network:
         driver: bridge
